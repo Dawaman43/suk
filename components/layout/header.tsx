@@ -78,8 +78,8 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchIdx, setSearchIdx] = useState(0);
-  const [cartCount] = useState(3);               // <-- replace with store
-  const [isLoggedIn] = useState(false);          // <-- replace with auth
+  const [cartCount] = useState(3); // <-- replace with store
+  const [isLoggedIn] = useState(false); // <-- replace with auth
   const searchRef = useRef<HTMLInputElement>(null);
 
   /* ---- Mount guard ---- */
@@ -107,7 +107,6 @@ export default function Header() {
       className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
     >
       <div className="container flex h-16 items-center justify-between px-4">
-
         {/* ---------- LEFT: LOGO + DESKTOP NAV ---------- */}
         <div className="flex items-center gap-6">
           {/* Logo */}
@@ -139,7 +138,6 @@ export default function Header() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="flex items-center gap-1 text-sm font-medium">
                   Categories
-                 
                 </NavigationMenuTrigger>
 
                 <NavigationMenuContent>
@@ -184,7 +182,6 @@ export default function Header() {
 
         {/* ---------- RIGHT: ACTIONS ---------- */}
         <div className="flex items-center gap-1">
-
           {/* Theme */}
           <Button
             variant="ghost"
@@ -196,7 +193,11 @@ export default function Header() {
               animate={{ rotate: isDark ? 180 : 0 }}
               transition={{ duration: 0.4 }}
             >
-              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {isDark ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </motion.div>
           </Button>
 
@@ -332,7 +333,11 @@ const MobileDrawer = ({
   <div className="flex flex-col h-full">
     {/* Header */}
     <div className="flex items-center justify-between p-4 border-b">
-      <Link href="/" className="flex items-center gap-2 font-bold text-lg" onClick={close}>
+      <Link
+        href="/"
+        className="flex items-center gap-2 font-bold text-lg"
+        onClick={close}
+      >
         <ShoppingBag className="h-6 w-6 text-primary" />
         Suq
       </Link>
@@ -351,16 +356,27 @@ const MobileDrawer = ({
 
     {/* Navigation */}
     <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-      <MobileLink href="/buy" Icon={ShoppingBag} onClick={close}>Buy</MobileLink>
-      <MobileLink href="/sell" Icon={Package} onClick={close}>Sell</MobileLink>
-      <MobileLink href="/about" Icon={Sparkles} onClick={close}>About</MobileLink>
+      <MobileLink href="/buy" Icon={ShoppingBag} onClick={close}>
+        Buy
+      </MobileLink>
+      <MobileLink href="/sell" Icon={Package} onClick={close}>
+        Sell
+      </MobileLink>
+      <MobileLink href="/about" Icon={Sparkles} onClick={close}>
+        About
+      </MobileLink>
 
       <div className="pt-4 border-t">
         <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Categories
         </p>
         {categories.map((c) => (
-          <MobileLink key={c.name} href={c.href} onClick={close} className="pl-4 text-sm">
+          <MobileLink
+            key={c.name}
+            href={c.href}
+            onClick={close}
+            className="pl-4 text-sm"
+          >
             {c.name}
           </MobileLink>
         ))}
@@ -371,7 +387,11 @@ const MobileDrawer = ({
     <div className="p-4 border-t space-y-3">
       {isLoggedIn ? (
         <>
-          <Button variant="ghost" className="w-full justify-start" onClick={close}>
+          <Button
+            variant="ghost"
+            className="w-full justify-start"
+            onClick={close}
+          >
             <User className="mr-2 h-4 w-4" /> Profile
           </Button>
           <Button
@@ -384,7 +404,10 @@ const MobileDrawer = ({
         </>
       ) : (
         <Button asChild className="w-full" onClick={close}>
-          <Link href="/auth/signin" className="flex items-center justify-center gap-2">
+          <Link
+            href="/auth/signin"
+            className="flex items-center justify-center gap-2"
+          >
             <LogIn className="h-4 w-4" /> Sign In
           </Link>
         </Button>
@@ -398,7 +421,11 @@ const MobileDrawer = ({
           close();
         }}
       >
-        {isDark ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+        {isDark ? (
+          <Sun className="mr-2 h-4 w-4" />
+        ) : (
+          <Moon className="mr-2 h-4 w-4" />
+        )}
         {isDark ? "Light Mode" : "Dark Mode"}
       </Button>
 
