@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Button } from "../button";
+import { Button } from "../ui/button";
 import { Moon, Sun, Menu, X, Search, User, LogIn } from "lucide-react";
 
 const Header = () => {
@@ -27,7 +27,7 @@ const Header = () => {
           {/* left: brand */}
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex items-center gap-3">
-              2 <span className="font-semibold text-lg">Suq</span>
+              <span className="font-semibold text-lg">Suq</span>
             </Link>
 
             {/* primary nav - hidden on small screens */}
