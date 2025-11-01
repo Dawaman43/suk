@@ -7,8 +7,6 @@ import { useEffect, useState } from "react";
 import {
   Users,
   Store,
-  Shield,
-  Handshake,
   ArrowRight,
   Target,
   Zap,
