@@ -9,8 +9,11 @@ import {
   Store,
   Shield,
   Handshake,
-  Sparkles,
   ArrowRight,
+  Target,
+  Zap,
+  Lock,
+  Globe,
 } from "lucide-react";
 
 const cardContent = [
@@ -27,13 +30,13 @@ const cardContent = [
       "List your products and reach a broader audience without worrying about platform fees. Suq empowers young entrepreneurs to thrive in the B2B marketplace.",
   },
   {
-    headerIcon: <Shield className="size-6" />,
+    headerIcon: <Lock className="size-6" />,
     header: "Secure Transactions",
     content:
       "Our platform ensures secure and transparent transactions between buyers and sellers, fostering trust and reliability in every deal.",
   },
   {
-    headerIcon: <Handshake className="size-6" />,
+    headerIcon: <Globe className="size-6" />,
     header: "Community Support",
     content:
       "Join a vibrant community of young entrepreneurs and business owners. Share insights, collaborate, and grow together in a supportive environment.",
@@ -60,7 +63,6 @@ export default function HeroSection() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-      {/* ----- Animated background orbs (indigo / teal) ----- */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <motion.div
           className="absolute -top-40 -left-40 size-96 rounded-full bg-indigo-400 opacity-15 blur-3xl"
@@ -74,7 +76,6 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* ----- Mouse-following glow (single indigo) ----- */}
       <motion.div
         className="pointer-events-none fixed inset-0 -z-10"
         style={{ x: glowX, y: glowY }}
@@ -82,10 +83,8 @@ export default function HeroSection() {
         <div className="size-96 rounded-full bg-indigo-500 blur-3xl opacity-20" />
       </motion.div>
 
-      {/* ----- Main container ----- */}
       <div className="container relative mx-auto px-4 py-16 md:py-24 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* ==== LEFT – Text + CTA ==== */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
             animate={{ opacity: 1, x: 0 }}
@@ -93,7 +92,7 @@ export default function HeroSection() {
             className="space-y-7"
           >
             <div className="flex items-center gap-2 text-sm font-medium text-indigo-600 dark:text-indigo-400">
-              <Sparkles className="size-4" />
+              <Target className="size-4" />
               <span>Youth-Powered B2B Marketplace</span>
             </div>
 
@@ -143,7 +142,6 @@ export default function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* ==== RIGHT – Hero Image ==== */}
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -158,7 +156,6 @@ export default function HeroSection() {
                 alt="Suq Hero"
                 className="rounded-2xl shadow-2xl"
               />
-              {/* subtle orbiting ring */}
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
@@ -168,7 +165,6 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* ==== Feature Cards ==== */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -190,7 +186,7 @@ export default function HeroSection() {
                     <div className="rounded-lg bg-indigo-600 p-2 text-white transition-transform group-hover:scale-110">
                       {card.headerIcon}
                     </div>
-                    <Sparkles className="size-4 text-indigo-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                    <Zap className="size-4 text-indigo-500 opacity-0 transition-opacity group-hover:opacity-100" />
                   </div>
                   <h3 className="text-lg font-bold text-foreground">
                     {card.header}
