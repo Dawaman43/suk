@@ -3,6 +3,7 @@ import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/layout/header";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -82,6 +83,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
+          <Toaster />
           <main>{children}</main>
         </ThemeProvider>
       </body>
