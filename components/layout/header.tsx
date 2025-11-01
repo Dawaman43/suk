@@ -46,9 +46,6 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-/* --------------------------------------------------------------- */
-/*                        CATEGORY DATA                           */
-/* --------------------------------------------------------------- */
 const categories = [
   { name: "Electronics", href: "/category/electronics", Icon: Laptop },
   { name: "Fashion", href: "/category/fashion", Icon: Shirt },
@@ -70,8 +67,8 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchIdx, setSearchIdx] = useState(0);
-  const [cartCount] = useState(3); // <-- replace with store
-  const [isLoggedIn] = useState(false); // <-- replace with auth
+  const [cartCount] = useState(3);
+  const [isLoggedIn] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -94,7 +91,7 @@ export default function Header() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 120, damping: 20 }}
-      className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70"
     >
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
@@ -104,17 +101,17 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
               className="relative"
             >
-              <ShoppingBag className="h-7 w-7 text-primary" />
+              <ShoppingBag className="h-7 w-7 text-indigo-600 dark:text-indigo-400" />
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -inset-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-30 blur-xl"
+                className="absolute -inset-1 rounded-full bg-indigo-500/20 opacity-0 group-hover:opacity-30 blur-xl"
               />
             </motion.div>
             <motion.span
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              className="font-bold text-xl tracking-tight"
+              className="font-bold text-xl tracking-tight text-foreground"
             >
               Suq
             </motion.span>
@@ -123,7 +120,7 @@ export default function Header() {
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="flex items-center gap-1 text-sm font-medium">
+                <NavigationMenuTrigger className="flex items-center gap-1 text-sm font-medium text-foreground">
                   Categories
                 </NavigationMenuTrigger>
 
@@ -145,12 +142,12 @@ export default function Header() {
           role="search"
         >
           <div className="relative w-full group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" />
             <Input
               ref={searchRef}
               type="search"
               placeholder={placeholderTexts[searchIdx]}
-              className="pl-10 h-10 bg-muted/50 transition-all focus:bg-background focus:shadow-md"
+              className="pl-10 h-10 bg-muted/40 transition-all focus:bg-background focus:shadow-md focus:border-indigo-300 dark:focus:border-indigo-700"
             />
             <AnimatePresence mode="wait">
               <motion.span
@@ -178,19 +175,19 @@ export default function Header() {
               transition={{ duration: 0.4 }}
             >
               {isDark ? (
-                <Sun className="h-5 w-5" />
+                <Sun className="h-5 w-5 text-yellow-500" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-5 w-5 text-slate-700" />
               )}
             </motion.div>
           </Button>
 
           <Button variant="ghost" size="icon" className="hidden md:flex">
-            <Heart className="h-5 w-5" />
+            <Heart className="h-5 w-5 text-foreground" />
           </Button>
 
           <Button variant="ghost" size="icon" className="relative">
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingBag className="h-5 w-5 text-foreground" />
             {cartCount > 0 && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -198,8 +195,8 @@ export default function Header() {
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs font-bold"
+                  variant="default"
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs font-bold bg-indigo-600 text-white"
                 >
                   {cartCount}
                 </Badge>
@@ -211,9 +208,11 @@ export default function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-8 w-8 ring-2 ring-indigo-600/20">
                     <AvatarImage src="/avatar.jpg" alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarFallback className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                      U
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -234,14 +233,18 @@ export default function Header() {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive">
+                <DropdownMenuItem className="text-red-600 dark:text-red-400">
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild size="sm" className="hidden sm:flex">
+            <Button
+              asChild
+              size="sm"
+              className="hidden sm:flex bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
               <Link href="/auth/signin" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
                 Sign In
@@ -256,7 +259,10 @@ export default function Header() {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 p-0">
+            <SheetContent
+              side="right"
+              className="w-80 p-0 bg-background/95 backdrop-blur-xl"
+            >
               <MobileDrawer
                 isDark={isDark}
                 setTheme={setTheme}
@@ -282,11 +288,11 @@ const MegaMenuItem = ({
   Icon: React.ElementType;
 }) => (
   <Link href={href} legacyBehavior passHref>
-    <NavigationMenuLink className="group flex flex-col items-center gap-3 rounded-lg p-4 transition-all hover:bg-accent/50">
-      <div className="rounded-full bg-primary/10 p-3 group-hover:bg-primary/20 transition-colors">
-        <Icon className="h-6 w-6 text-primary" />
+    <NavigationMenuLink className="group flex flex-col items-center gap-3 rounded-lg p-4 transition-all hover:bg-indigo-50 dark:hover:bg-indigo-900/20">
+      <div className="rounded-full bg-indigo-100 p-3 group-hover:bg-indigo-200 dark:bg-indigo-900 dark:group-hover:bg-indigo-800 transition-colors">
+        <Icon className="h-6 w-6 text-indigo-700 dark:text-indigo-300" />
       </div>
-      <span className="text-sm font-medium">{name}</span>
+      <span className="text-sm font-medium text-foreground">{name}</span>
     </NavigationMenuLink>
   </Link>
 );
@@ -305,14 +311,13 @@ const MobileDrawer = ({
   close: () => void;
 }) => (
   <div className="flex flex-col h-full">
-    {/* Header */}
     <div className="flex items-center justify-between p-4 border-b">
       <Link
         href="/"
         className="flex items-center gap-2 font-bold text-lg"
         onClick={close}
       >
-        <ShoppingBag className="h-6 w-6 text-primary" />
+        <ShoppingBag className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
         Suq
       </Link>
     </div>
@@ -364,14 +369,18 @@ const MobileDrawer = ({
           </Button>
           <Button
             variant="ghost"
-            className="w-full justify-start text-destructive"
+            className="w-full justify-start text-red-600 dark:text-red-400"
             onClick={close}
           >
             <LogOut className="mr-2 h-4 w-4" /> Sign Out
           </Button>
         </>
       ) : (
-        <Button asChild className="w-full" onClick={close}>
+        <Button
+          asChild
+          className="w-full bg-indigo-600 hover:bg-indigo-700"
+          onClick={close}
+        >
           <Link
             href="/auth/signin"
             className="flex items-center justify-center gap-2"
@@ -390,9 +399,9 @@ const MobileDrawer = ({
         }}
       >
         {isDark ? (
-          <Sun className="mr-2 h-4 w-4" />
+          <Sun className="mr-2 h-4 w-4 text-yellow-500" />
         ) : (
-          <Moon className="mr-2 h-4 w-4" />
+          <Moon className="mr-2 h-4 w-4 text-slate-700" />
         )}
         {isDark ? "Light Mode" : "Dark Mode"}
       </Button>
@@ -400,7 +409,7 @@ const MobileDrawer = ({
       {cartCount > 0 && (
         <div className="flex items-center justify-between text-sm">
           <span className="font-medium">Cart</span>
-          <Badge variant="destructive">{cartCount}</Badge>
+          <Badge className="bg-indigo-600 text-white">{cartCount}</Badge>
         </div>
       )}
     </div>
@@ -424,11 +433,11 @@ const MobileLink = ({
     href={href}
     onClick={onClick}
     className={cn(
-      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent/80",
+      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-900/20",
       className
     )}
   >
-    {Icon && <Icon className="h-4 w-4" />}
+    {Icon && <Icon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />}
     {children}
   </Link>
 );
