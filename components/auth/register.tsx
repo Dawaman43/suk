@@ -24,6 +24,7 @@ import {
 import { Button } from "../ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner"; // Assuming Sonner for toasts; install if needed
+import { signUp } from "@/lib/auth-client";
 
 const registerSchema = z
   .object({
@@ -91,13 +92,24 @@ function Register() {
       const location = data.city
         ? `${data.city}, ${data.state}`
         : data.state || "";
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log({ ...data, location });
+
+      await signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.username,
+      });
+
       toast.success("Registration successful! Welcome to Suq.");
       form.reset();
-    } catch (error) {
-      toast.error("Registration failed. Please try again.");
+    } catch (error: unknown) {
+      console.error("SignUp Error:", error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+          ? error
+          : "Registration failed. Please try again.";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

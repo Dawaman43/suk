@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { MongoClient } from "mongodb";
-import clientPromise from "./mongo";
+import clientPromise from "@/lib/mongo";
 
 const client = await clientPromise;
 
@@ -10,12 +9,8 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET!,
   url: process.env.BETTER_AUTH_URL!,
   clientType: "nextjs",
-
   database: mongodbAdapter(client.db("suq")),
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
-  },
+  emailAndPassword: { enabled: true, requireEmailVerification: false },
   socialProviders: {
     google: {
       enabled: true,
