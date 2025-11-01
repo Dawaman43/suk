@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Home, ArrowLeft, Package, Search, Sparkles } from "lucide-react";
+import {
+  ShoppingBag,
+  Home,
+  ArrowLeft,
+  Package,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -124,7 +131,8 @@ export default function NotFound() {
                 Oops! Page Not Found
               </h2>
               <p className="mx-auto max-w-md text-muted-foreground">
-                The page you're looking for seems to have wandered off. It might be out shopping!
+                The page you@apos;re looking for seems to have wandered off. It
+                might be out shopping!
               </p>
             </motion.div>
 
@@ -175,7 +183,10 @@ export default function NotFound() {
             transition={{ delay: 1.4 }}
             className="absolute bottom-8 left-1/2 -translate-x-1/2"
           >
-            <Link href="/" className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+            >
               <ShoppingBag className="size-5" />
               <span className="font-semibold">Suq</span>
               <span className="text-xs">© {new Date().getFullYear()}</span>

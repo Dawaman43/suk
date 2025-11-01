@@ -1,8 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-lobster: "Lobster", sans-serif;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

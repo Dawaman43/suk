@@ -37,14 +37,12 @@ import {
   Settings,
   Package,
   LogOut,
-  ChevronDown,
   Laptop,
   Shirt,
   Home,
   Sparkles,
   Trophy,
   Book,
-  X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -60,9 +58,6 @@ const categories = [
   { name: "Books", href: "/category/books", Icon: Book },
 ];
 
-/* --------------------------------------------------------------- */
-/*                     PLACEHOLDER TEXTS                           */
-/* --------------------------------------------------------------- */
 const placeholderTexts = [
   "Search iPhone 15...",
   "Find Nike sneakers...",
@@ -70,9 +65,6 @@ const placeholderTexts = [
   "Explore skincare deals...",
 ];
 
-/* --------------------------------------------------------------- */
-/*                         MAIN COMPONENT                          */
-/* --------------------------------------------------------------- */
 export default function Header() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -82,13 +74,11 @@ export default function Header() {
   const [isLoggedIn] = useState(false); // <-- replace with auth
   const searchRef = useRef<HTMLInputElement>(null);
 
-  /* ---- Mount guard ---- */
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
-  /* ---- Placeholder carousel ---- */
   useEffect(() => {
     const id = setInterval(() => {
       setSearchIdx((i) => (i + 1) % placeholderTexts.length);
@@ -107,9 +97,7 @@ export default function Header() {
       className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
     >
       <div className="container flex h-16 items-center justify-between px-4">
-        {/* ---------- LEFT: LOGO + DESKTOP NAV ---------- */}
         <div className="flex items-center gap-6">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <motion.div
               whileHover={{ scale: 1.1 }}
@@ -132,7 +120,6 @@ export default function Header() {
             </motion.span>
           </Link>
 
-          {/* Desktop Mega-Menu */}
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -152,7 +139,6 @@ export default function Header() {
           </NavigationMenu>
         </div>
 
-        {/* ---------- CENTER: SEARCH (desktop) ---------- */}
         <form
           onSubmit={(e) => e.preventDefault()}
           className="hidden md:flex flex-1 max-w-md mx-8"
@@ -180,9 +166,7 @@ export default function Header() {
           </div>
         </form>
 
-        {/* ---------- RIGHT: ACTIONS ---------- */}
         <div className="flex items-center gap-1">
-          {/* Theme */}
           <Button
             variant="ghost"
             size="icon"
@@ -201,12 +185,10 @@ export default function Header() {
             </motion.div>
           </Button>
 
-          {/* Wishlist */}
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Heart className="h-5 w-5" />
           </Button>
 
-          {/* Cart */}
           <Button variant="ghost" size="icon" className="relative">
             <ShoppingBag className="h-5 w-5" />
             {cartCount > 0 && (
@@ -225,7 +207,6 @@ export default function Header() {
             )}
           </Button>
 
-          {/* Auth / Profile */}
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -268,7 +249,6 @@ export default function Header() {
             </Button>
           )}
 
-          {/* Mobile menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -292,9 +272,6 @@ export default function Header() {
   );
 }
 
-/* --------------------------------------------------------------- */
-/*                     MEGA-MENU ITEM                              */
-/* --------------------------------------------------------------- */
 const MegaMenuItem = ({
   name,
   href,
@@ -314,9 +291,6 @@ const MegaMenuItem = ({
   </Link>
 );
 
-/* --------------------------------------------------------------- */
-/*                       MOBILE DRAWER                             */
-/* --------------------------------------------------------------- */
 const MobileDrawer = ({
   isDark,
   setTheme,
@@ -341,12 +315,8 @@ const MobileDrawer = ({
         <ShoppingBag className="h-6 w-6 text-primary" />
         Suq
       </Link>
-      <Button variant="ghost" size="icon" onClick={close}>
-        <X className="h-5 w-5" />
-      </Button>
     </div>
 
-    {/* Search */}
     <div className="p-4 border-b">
       <form className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -354,7 +324,6 @@ const MobileDrawer = ({
       </form>
     </div>
 
-    {/* Navigation */}
     <nav className="flex-1 overflow-y-auto p-4 space-y-1">
       <MobileLink href="/buy" Icon={ShoppingBag} onClick={close}>
         Buy
@@ -383,7 +352,6 @@ const MobileDrawer = ({
       </div>
     </nav>
 
-    {/* Footer */}
     <div className="p-4 border-t space-y-3">
       {isLoggedIn ? (
         <>
@@ -439,9 +407,6 @@ const MobileDrawer = ({
   </div>
 );
 
-/* --------------------------------------------------------------- */
-/*                     MOBILE LINK COMPONENT                        */
-/* --------------------------------------------------------------- */
 const MobileLink = ({
   href,
   children,
