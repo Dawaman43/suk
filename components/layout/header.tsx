@@ -245,7 +245,7 @@ export default function Header() {
               size="sm"
               className="hidden sm:flex bg-indigo-600 hover:bg-indigo-700 text-white"
             >
-              <Link href="/auth/signin" className="flex items-center gap-2">
+              <Link href="/auth" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
                 Sign In
               </Link>
