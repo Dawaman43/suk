@@ -1,27 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getAllProducts,
-  getProductById,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-  Product,
-} from "@/models/product";
+import { getAllProducts, addProduct, Product } from "@/models/product";
 import { ObjectId } from "mongodb";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (id) {
-      const product = await getProductById(id);
-      if (!product)
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      return NextResponse.json(product);
-    }
-
     const products = await getAllProducts();
     return NextResponse.json(products);
   } catch (err) {
@@ -58,51 +40,6 @@ export async function POST(req: NextRequest) {
     console.error(err);
     return NextResponse.json(
       { error: "Failed to add product" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(req: NextRequest) {
-  try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (!id)
-      return NextResponse.json(
-        { error: "Missing product ID" },
-        { status: 400 }
-      );
-
-    const updates = (await req.json()) as Partial<Product>;
-    if (updates.sellerId && typeof updates.sellerId === "string") {
-      updates.sellerId = new ObjectId(updates.sellerId);
-    }
-
-    await updateProduct(id, updates);
-    return NextResponse.json({ message: "Product updated successfully" });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { error: "Failed to update product" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req: NextRequest) {
-  try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (!id)
-      return NextResponse.json(
-        { error: "Missing product ID" },
-        { status: 400 }
-      );
-
-    await deleteProduct(id);
-    return NextResponse.json({ message: "Product deleted successfully" });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { error: "Failed to delete product" },
       { status: 500 }
     );
   }
