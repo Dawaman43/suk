@@ -2,12 +2,17 @@ import clientPromise from "@/lib/mongo";
 import { ObjectId } from "mongodb";
 
 export interface Product {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
-  sellerId: string;
+  images: string[];
+  sellerId: ObjectId;
+  status: "available" | "sold" | "reserved";
+  createdAt: Date;
+  updatedAt: Date;
+  category?: string;
+  location?: string;
 }
 
 const COLLECTION_NAME = "products";
@@ -27,25 +32,40 @@ export async function getProductById(id: string): Promise<Product | null> {
 }
 
 export async function addProduct(
-  product: Omit<Product, "_id">
+  product: Omit<Product, "_id" | "createdAt" | "updatedAt">
 ): Promise<Product> {
   const client = await clientPromise;
   const db = client.db();
-  const result = await db
-    .collection<Omit<Product, "_id">>(COLLECTION_NAME)
-    .insertOne(product);
-  return { _id: result.insertedId, ...product };
+  const now = new Date();
+
+  const result = await db.collection<Product>(COLLECTION_NAME).insertOne({
+    ...product,
+    status: product.status || "available",
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  return {
+    _id: result.insertedId,
+    ...product,
+    status: product.status || "available",
+    createdAt: now,
+    updatedAt: now,
+  };
 }
 
 export async function updateProduct(
   id: string,
-  updates: Partial<Product>
+  updates: Partial<Omit<Product, "_id" | "createdAt">>
 ): Promise<void> {
   const client = await clientPromise;
   const db = client.db();
   await db
     .collection<Product>(COLLECTION_NAME)
-    .updateOne({ _id: new ObjectId(id) }, { $set: updates });
+    .updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { ...updates, updatedAt: new Date() } }
+    );
 }
 
 export async function deleteProduct(id: string): Promise<void> {

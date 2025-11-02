@@ -1,11 +1,13 @@
-import {
-  addProduct,
-  deleteProduct,
-  getProductById,
-  Product,
-  updateProduct,
-} from "@/models/product";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  getAllProducts,
+  getProductById,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  Product,
+} from "@/models/product";
+import { ObjectId } from "mongodb";
 
 export async function GET(req: NextRequest) {
   try {
@@ -19,10 +21,13 @@ export async function GET(req: NextRequest) {
         );
       return NextResponse.json(product);
     }
-  } catch (error) {
-    console.error(error);
+
+    const products = await getAllProducts();
+    return NextResponse.json(products);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
-      { error: "Failed to fetch product" },
+      { error: "Failed to fetch products" },
       { status: 500 }
     );
   }
@@ -30,11 +35,27 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as Omit<Product, "_id">;
-    const newProduct = await addProduct(body);
+    const body = (await req.json()) as Omit<
+      Product,
+      "_id" | "createdAt" | "updatedAt"
+    >;
+
+    if (!body.name || !body.price || !body.images?.length || !body.sellerId) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const sellerId =
+      typeof body.sellerId === "string"
+        ? new ObjectId(body.sellerId)
+        : body.sellerId;
+
+    const newProduct = await addProduct({ ...body, sellerId });
     return NextResponse.json(newProduct, { status: 201 });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
       { error: "Failed to add product" },
       { status: 500 }
@@ -47,17 +68,21 @@ export async function PUT(req: NextRequest) {
     const id = req.nextUrl.searchParams.get("id");
     if (!id)
       return NextResponse.json(
-        { error: "Missing product id" },
+        { error: "Missing product ID" },
         { status: 400 }
       );
 
     const updates = (await req.json()) as Partial<Product>;
+    if (updates.sellerId && typeof updates.sellerId === "string") {
+      updates.sellerId = new ObjectId(updates.sellerId);
+    }
+
     await updateProduct(id, updates);
     return NextResponse.json({ message: "Product updated successfully" });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
-      { error: "Failed to add product" },
+      { error: "Failed to update product" },
       { status: 500 }
     );
   }
@@ -68,16 +93,16 @@ export async function DELETE(req: NextRequest) {
     const id = req.nextUrl.searchParams.get("id");
     if (!id)
       return NextResponse.json(
-        { error: "Missing product id" },
+        { error: "Missing product ID" },
         { status: 400 }
       );
 
     await deleteProduct(id);
     return NextResponse.json({ message: "Product deleted successfully" });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
-      { error: "Failed to add product" },
+      { error: "Failed to delete product" },
       { status: 500 }
     );
   }
