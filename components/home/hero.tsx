@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Users,
   Store,
@@ -42,7 +42,6 @@ const cardContent = [
 ];
 
 export default function HeroSection() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -51,7 +50,6 @@ export default function HeroSection() {
 
   useEffect(() => {
     const handle = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
@@ -60,7 +58,7 @@ export default function HeroSection() {
   }, [mouseX, mouseY]);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+    <section className="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <motion.div
           className="absolute -top-40 -left-40 size-96 rounded-full bg-indigo-400 opacity-15 blur-3xl"

@@ -75,7 +75,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${oswald.variable} antialiased`}>
+      <body
+        className={`${inter.variable} ${oswald.variable} antialiased min-h-screen bg-linear-to-br from-gray-50 via-white to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800`}
+      >
         <ThemeProvider
           attribute="class"
           enableSystem
