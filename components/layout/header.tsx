@@ -45,6 +45,14 @@ import {
   Book,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getSession } from "@/lib/auth-client";
+
+type UserTypes = {
+  id: string;
+  name: string;
+  email: string;
+  photo: string;
+};
 
 const categories = [
   { name: "Electronics", href: "/category/electronics", Icon: Laptop },
@@ -68,14 +76,17 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchIdx, setSearchIdx] = useState(0);
   const [cartCount] = useState(3);
-  const [isLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<UserTypes | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  // Mount check for theme
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
+  // Rotate placeholder text
   useEffect(() => {
     const id = setInterval(() => {
       setSearchIdx((i) => (i + 1) % placeholderTexts.length);
@@ -83,7 +94,38 @@ export default function Header() {
     return () => clearInterval(id);
   }, []);
 
+  // Fetch session & user
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const session = await getSession();
+        const currentUser = session.data?.user;
+
+        if (currentUser) {
+          setIsLoggedIn(true);
+          setUser({
+            id: currentUser.id,
+            name: currentUser.name || "User",
+            email: currentUser.email,
+            photo: currentUser.image ?? "",
+          });
+        } else {
+          setIsLoggedIn(false);
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch session:", error);
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // Prevent render until mounted (avoid hydration mismatch)
   if (!mounted) return null;
+
   const isDark = resolvedTheme === "dark";
 
   return (
@@ -94,6 +136,7 @@ export default function Header() {
       className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70"
     >
       <div className="container flex h-16 items-center justify-between px-4">
+        {/* Logo + Categories */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
             <motion.div
@@ -136,6 +179,7 @@ export default function Header() {
           </NavigationMenu>
         </div>
 
+        {/* Search Bar */}
         <form
           onSubmit={(e) => e.preventDefault()}
           className="hidden md:flex flex-1 max-w-md mx-8"
@@ -163,7 +207,9 @@ export default function Header() {
           </div>
         </form>
 
+        {/* Right Actions */}
         <div className="flex items-center gap-1">
+          {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -182,10 +228,12 @@ export default function Header() {
             </motion.div>
           </Button>
 
+          {/* Wishlist */}
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Heart className="h-5 w-5 text-foreground" />
           </Button>
 
+          {/* Cart */}
           <Button variant="ghost" size="icon" className="relative">
             <ShoppingBag className="h-5 w-5 text-foreground" />
             {cartCount > 0 && (
@@ -204,21 +252,30 @@ export default function Header() {
             )}
           </Button>
 
-          {isLoggedIn ? (
+          {/* User Avatar or Sign In */}
+          {isLoggedIn && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8 ring-2 ring-indigo-600/20">
-                    <AvatarImage src="/avatar.jpg" alt="User" />
+                    <AvatarImage
+                      src={user.photo || undefined}
+                      alt={user.name}
+                    />
                     <AvatarFallback className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
-                      U
+                      {user.name[0].toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {user.name}
+                  <p className="text-xs font-normal text-muted-foreground">
+                    {user.email}
+                  </p>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
@@ -252,6 +309,7 @@ export default function Header() {
             </Button>
           )}
 
+          {/* Mobile Menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -267,6 +325,7 @@ export default function Header() {
                 isDark={isDark}
                 setTheme={setTheme}
                 isLoggedIn={isLoggedIn}
+                user={user}
                 cartCount={cartCount}
                 close={() => setMobileOpen(false)}
               />
@@ -278,6 +337,7 @@ export default function Header() {
   );
 }
 
+// Mega Menu Item
 const MegaMenuItem = ({
   name,
   href,
@@ -297,16 +357,19 @@ const MegaMenuItem = ({
   </Link>
 );
 
+// Mobile Drawer
 const MobileDrawer = ({
   isDark,
   setTheme,
   isLoggedIn,
+  user,
   cartCount,
   close,
 }: {
   isDark: boolean;
   setTheme: (t: "light" | "dark") => void;
   isLoggedIn: boolean;
+  user: UserTypes | null;
   cartCount: number;
   close: () => void;
 }) => (
@@ -358,8 +421,18 @@ const MobileDrawer = ({
     </nav>
 
     <div className="p-4 border-t space-y-3">
-      {isLoggedIn ? (
+      {isLoggedIn && user ? (
         <>
+          <div className="flex items-center gap-3 px-3 py-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user.photo} alt={user.name} />
+              <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">{user.name}</p>
+              <p className="text-xs text-muted-foreground">{user.email}</p>
+            </div>
+          </div>
           <Button
             variant="ghost"
             className="w-full justify-start"
@@ -381,10 +454,7 @@ const MobileDrawer = ({
           className="w-full bg-indigo-600 hover:bg-indigo-700"
           onClick={close}
         >
-          <Link
-            href="/auth/signin"
-            className="flex items-center justify-center gap-2"
-          >
+          <Link href="/auth" className="flex items-center justify-center gap-2">
             <LogIn className="h-4 w-4" /> Sign In
           </Link>
         </Button>
@@ -416,6 +486,7 @@ const MobileDrawer = ({
   </div>
 );
 
+// Mobile Link
 const MobileLink = ({
   href,
   children,
