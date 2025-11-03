@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllProducts, addProduct, Product } from "@/models/product";
+import { getAllProducts, addProduct } from "@/models/product";
 import { ObjectId } from "mongodb";
+import { Product } from "@/types/product";
 
 export async function GET() {
   try {
