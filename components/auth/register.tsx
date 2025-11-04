@@ -26,7 +26,7 @@ import { Button } from "../ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { signUp } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const registerSchema = z
@@ -62,6 +62,7 @@ type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 function Register() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +94,8 @@ function Register() {
 
       toast.success("Welcome to Suq! Your account has been created.");
       form.reset();
-      setTimeout(() => router.push("/"), 1500);
+      const next = searchParams?.get("redirect") || "/";
+      setTimeout(() => router.push(next), 800);
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Registration failed.";
@@ -363,7 +365,13 @@ function Register() {
         <span className="text-muted-foreground">Already have an account? </span>
         <button
           type="button"
-          onClick={() => router.push("/auth")}
+          onClick={() =>
+            router.push(
+              `/auth?tab=login&redirect=${encodeURIComponent(
+                searchParams?.get("redirect") || "/"
+              )}`
+            )
+          }
           className="font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:underline transition-colors"
         >
           Sign in

@@ -23,17 +23,34 @@ export async function POST(req: NextRequest) {
       "_id" | "createdAt" | "updatedAt"
     >;
 
-    if (!body.name || !body.price || !body.images?.length || !body.sellerId) {
+    // Validate basic fields (allow price 0, require non-empty name, at least 1 image)
+    const hasMissingRequired =
+      !body?.name?.trim() ||
+      body.price === undefined ||
+      body.price < 0 ||
+      !Array.isArray(body.images) ||
+      body.images.length === 0 ||
+      !body.sellerId;
+    if (hasMissingRequired) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing or invalid required fields" },
         { status: 400 }
       );
     }
 
-    const sellerId =
-      typeof body.sellerId === "string"
-        ? new ObjectId(body.sellerId)
-        : body.sellerId;
+    // Normalize and validate sellerId
+    let sellerId: ObjectId;
+    if (typeof body.sellerId === "string") {
+      if (!ObjectId.isValid(body.sellerId)) {
+        return NextResponse.json(
+          { error: "Invalid sellerId format" },
+          { status: 400 }
+        );
+      }
+      sellerId = new ObjectId(body.sellerId);
+    } else {
+      sellerId = body.sellerId;
+    }
 
     const newProduct = await addProduct({ ...body, sellerId });
     return NextResponse.json(newProduct, { status: 201 });
