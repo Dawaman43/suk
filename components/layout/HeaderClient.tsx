@@ -178,7 +178,7 @@ export default function HeaderClient({ user }: HeaderProps) {
               asChild
               className="px-4 py-2 text-sm"
             >
-              <Link href="/orders" className="flex items-center gap-2">
+              <Link href="/order" className="flex items-center gap-2">
                 <Receipt className="h-4 w-4" />
                 Orders
               </Link>
