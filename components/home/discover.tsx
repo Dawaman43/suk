@@ -158,38 +158,53 @@ export default function DiscoverSection() {
   }, [products]);
 
   return (
-    <section className="container mx-auto px-4 py-12">
-      <div className="flex items-center gap-2 mb-6">
-        <Sparkles className="h-5 w-5 text-indigo-600" />
-        <h2 className="text-2xl font-bold">Discover your interest</h2>
+    <>
+      {/* Full-bleed header */}
+      <div className="relative mx-[calc(50%-50vw)] bg-linear-to-r from-indigo-50 via-white to-violet-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+        <div className="container mx-auto px-4 py-12 md:py-16">
+          <div className="flex items-center gap-2 mb-3 text-indigo-700 dark:text-indigo-300">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-sm font-medium">Hand-picked picks</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Discover your interest
+          </h2>
+          <p className="mt-2 text-muted-foreground max-w-2xl">
+            Explore top-ranked deals, fresh arrivals, and what&apos;s trending
+            from our community.
+          </p>
+        </div>
       </div>
 
-      <Tabs defaultValue="top" className="w-full">
-        <TabsList>
-          <TabsTrigger value="top" className="gap-1">
-            <Star className="h-4 w-4" /> Top ranked
-          </TabsTrigger>
-          <TabsTrigger value="new" className="gap-1">
-            <TrendingUp className="h-4 w-4" /> New arrivals
-          </TabsTrigger>
-          <TabsTrigger value="sellers" className="gap-1">
-            <Package className="h-4 w-4" /> Top sellers
-          </TabsTrigger>
-        </TabsList>
+      {/* Content */}
+      <section className="container mx-auto px-4 py-8">
+        <Tabs defaultValue="top" className="w-full">
+          <TabsList className="w-full h-11 justify-between">
+            <TabsTrigger value="top" className="gap-2 text-sm md:text-base">
+              <Star className="h-4 w-4" /> Top ranked
+            </TabsTrigger>
+            <TabsTrigger value="new" className="gap-2 text-sm md:text-base">
+              <TrendingUp className="h-4 w-4" /> New arrivals
+            </TabsTrigger>
+            <TabsTrigger value="sellers" className="gap-2 text-sm md:text-base">
+              <Package className="h-4 w-4" /> Top sellers
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="mt-6">
-          <TabsContent value="top">
-            <Grid loading={loading} items={topRanked} />
-          </TabsContent>
-          <TabsContent value="new">
-            <Grid loading={loading} items={newArrivals} />
-          </TabsContent>
-          <TabsContent value="sellers">
-            <Grid loading={loading} items={topSellers} />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </section>
+          <div className="mt-6">
+            <TabsContent value="top">
+              <Grid loading={loading} items={topRanked} />
+            </TabsContent>
+            <TabsContent value="new">
+              <Grid loading={loading} items={newArrivals} />
+            </TabsContent>
+            <TabsContent value="sellers">
+              <Grid loading={loading} items={topSellers} />
+            </TabsContent>
+          </div>
+        </Tabs>
+      </section>
+    </>
   );
 }
 
@@ -215,7 +230,12 @@ function Grid({ loading, items }: { loading: boolean; items: UIProduct[] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((p) => (
-        <ProductCard key={p._id} p={p} />
+        <div
+          key={p._id}
+          className="group transition-transform will-change-transform hover:-translate-y-0.5"
+        >
+          <ProductCard p={p} />
+        </div>
       ))}
     </div>
   );
